@@ -1,3 +1,7 @@
 databaseChangeLog:
-  - includeAll:
-      path: db/changelog/migrations
+  - include:
+      file: db/changelog/migrations/001-initial-setup.sql
+  - include:
+      file: db/changelog/migrations/002-add-block-card-feature.sql
+  - include:
+      file: db/changelog/migrations/003-add-card-timestamps.sql
