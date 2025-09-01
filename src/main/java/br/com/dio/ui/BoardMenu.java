@@ -168,6 +168,8 @@ public class BoardMenu {
                                         "Não está bloqueado");
                                 System.out.printf("Já foi bloqueado %s vezes\n", c.blocksAmount());
                                 System.out.printf("Está no momento na coluna %s - %s\n", c.columnId(), c.columnName());
+                                System.out.printf("Criado em: %s\n", c.createdAt());
+                                System.out.printf("Última movimentação: %s\n", c.movedAt());
                             },
                             () -> System.out.printf("Não existe um card com o id %s\n", selectedCardId));
         }
