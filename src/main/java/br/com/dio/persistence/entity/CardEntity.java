@@ -1,6 +1,7 @@
 package br.com.dio.persistence.entity;
 
 import lombok.Data;
+import java.time.OffsetDateTime;
 
 @Data
 public class CardEntity {
@@ -9,5 +10,7 @@ public class CardEntity {
     private String title;
     private String description;
     private BoardColumnEntity boardColumn = new BoardColumnEntity();
+    private OffsetDateTime createdAt;
+    private OffsetDateTime movedAt;
 
 }
