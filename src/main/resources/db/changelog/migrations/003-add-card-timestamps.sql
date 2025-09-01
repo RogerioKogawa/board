@@ -1,0 +1,8 @@
+
+--liquibase formatted sql
+
+--changeset rogerio:003-add-card-timestamps
+ALTER TABLE CARDS ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE CARDS ADD COLUMN moved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+UPDATE CARDS SET created_at = CURRENT_TIMESTAMP, moved_at = CURRENT_TIMESTAMP WHERE created_at IS NULL;
