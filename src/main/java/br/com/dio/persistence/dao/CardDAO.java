@@ -11,6 +11,9 @@ import java.util.Optional;
 
 import static br.com.dio.persistence.converter.OffsetDateTimeConverter.toOffsetDateTime;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
+import static java.time.ZoneOffset.UTC;
+
 
 @AllArgsConstructor
 public class CardDAO {
@@ -33,7 +36,7 @@ public class CardDAO {
     }
 
     public void moveToColumn(final Long columnId, final Long cardId) throws SQLException{
-        var sql = "UPDATE CARDS SET board_column_id = ? WHERE id = ?;";
+        var sql = "UPDATE CARDS SET board_column_id = ?, moved_at = NOW() WHERE id = ?;";
         try(var statement = connection.prepareStatement(sql)){
             var i = 1;
             statement.setLong(i ++, columnId);
@@ -54,7 +57,9 @@ public class CardDAO {
                        bc.name,
                        (SELECT COUNT(sub_b.id)
                                FROM BLOCKS sub_b
-                              WHERE sub_b.card_id = c.id) blocks_amount
+                              WHERE sub_b.card_id = c.id) blocks_amount,
+                       c.created_at,
+                       c.moved_at
                   FROM CARDS c
                   LEFT JOIN BLOCKS b
                     ON c.id = b.card_id
@@ -77,7 +82,11 @@ public class CardDAO {
                         resultSet.getString("b.block_reason"),
                         resultSet.getInt("blocks_amount"),
                         resultSet.getLong("c.board_column_id"),
-                        resultSet.getString("bc.name")
+                        resultSet.getString("bc.name"),
+                        isNull(resultSet.getTimestamp("c.created_at")) ? null :
+                                resultSet.getTimestamp("c.created_at").toInstant().atOffset(UTC),
+                        isNull(resultSet.getTimestamp("c.moved_at")) ? null :
+                                resultSet.getTimestamp("c.moved_at").toInstant().atOffset(UTC)
                 );
                 return Optional.of(dto);
             }
